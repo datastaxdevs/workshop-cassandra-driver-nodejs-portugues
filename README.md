@@ -257,6 +257,11 @@ has been filled with a simple query in the CQL Console:
 
 Once you see results, the import has finished.
 
+<details>
+    <summary>👁️ Loading data (click to expand)</summary>
+    <img src="images/astra_load_data.gif" />
+</details>
+
 _Note._ If you are using a default Cassandra installation instead of Astra DB,
 the above import procedure is replaced by a command in the CQL shell: assuming
 it has access to the file, and that you are on the `chemistry` keyspace, run

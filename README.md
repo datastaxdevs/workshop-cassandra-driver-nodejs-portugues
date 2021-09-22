@@ -98,12 +98,12 @@ _You can technically use whatever you want and update the code to reflect the ke
 
 You will see your new database `pending` in the Dashboard.
 
+The status will change to `Active` when the database is ready, this will only take 2-3 minutes. You will also receive an email when it is ready.
+
 <details>
-    <summary>👁️ Database in "pending" state (click to expand)</summary>
+    <summary>👁️ Database in "active" state (click to expand)</summary>
     <img src="images/dashboard-pending-1000-update.png" />
 </details>
-
-The status will change to `Active` when the database is ready, this will only take 2-3 minutes. You will also receive an email when it is ready.
 
 <details>
     <summary>👁️ DB creation walkthrough (click to expand)</summary>
@@ -123,8 +123,8 @@ the information in the token (specifically, the "Client ID" and
 provide authentication when connecting to the database from your computer.
 
 _Note_: once the token is created, please store it in a safe place (the Astra
-console won't show it again) and keep it as private as a password! You can
-download the token data in CSV format from the token generation page.
+console won't show it again) and keep it as private as a password! As long as you have not yeat left the page, you can also
+download/save the token data in CSV format.
 
 To create the token from your main dashboard (where your databases are listed)
 simply click on the "..." menu next to your database and choose "Generate a token".
@@ -145,7 +145,8 @@ sure you set Client ID and Client Secret to the ones for your token.
 
 #### Secure Connect Bundle
 
-The other piece needed is the SCB, a zip file containing certificates needed
+The other piece needed is the SCB, a zip file containing certificate
+and settings needed
 for the authentication to work. Go to your Astra DB console, choose your
 `nodepractice` database and pick the "Connect" tab. In the menu, click on
 the "Connect using a driver / Node.js" item and the main page
@@ -175,7 +176,7 @@ strings in the Node code - though this is a _Very Bad Practice™_.
 
 ### 2c. Connecting to a Cassandra DB
 
-If you want to practice with a standard Cassandra installation instead,
+If you want to practice with a standard Cassandra installation instead of an Astra DB instance,
 you will need the IP address(es) of at least one of the nodes in the cluster,
 plus any other authentication mechanism configured on the cluster.
 
@@ -314,8 +315,8 @@ piecewise to see what each block does. You will see, in this order,
 code snippets that achieve the following:
 
 - create a new `metals` table - CQL check with `DESCRIBE TABLES`
-- insert a row in it with a "questionable" statement - CQL check with `SELECT * FROM METALS;`
-- insert another row with a more gracious syntax
+- insert a row in it with a "questionable" statement - CQL check with `SELECT * FROM metals;`
+- insert another row with a more gracious syntax (parameter list and type hints)
 - insert another row with a prepared statement, with array- and object-based parameters
 - insert a row with an idiomatic promise-based construct
 - insert a row with an idiomatic callback-based construct
@@ -327,12 +328,12 @@ code snippets that achieve the following:
 ### 4c. A simple API
 
 You may have noticed that the `metals` table got hijacked by someone trying
-to squeeze metal _music_ into it. Problem is, you are asked to write a small
+to squeeze metal _music_ into it. Problem is, you are asked by a smelting company to write a small
 REST API to expose the "actual metals" part of the table.
 
 Fortunately for you, by staying in the partition with `kind = 'regular'`, you
-will be working with actual metals. And, even better, the API is there, waiting
-for you to start it!
+will be working with actual metals. And, even better, the API code is here in this repo, waiting
+for you to launch it!
 
 The API uses Express and holds a `Client` instance, used to access the
 underlying database. Please, go ahead and peek at the code, which in the

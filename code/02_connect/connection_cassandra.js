@@ -20,8 +20,8 @@ async function main() {
 
   const query = 'SELECT symbol, name FROM elements;';
 
-  client.execute(query)
-    .then(result => {
+  client.execute(query
+    ).then(result => {
       const rows = result.rows;
       rows.forEach( row => {
         console.log('Symbol for %s is %s', row['name'], row['symbol']);

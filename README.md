@@ -418,6 +418,12 @@ results in the local buffer, have a look at this `stream`-based idiom:
 
     node code/06_pagination/manual-stream.js
 
+#### Object mapper
+
+A simple script exemplifying the object mapper is found here:
+
+        node code/07_mapper/mapper.js
+
 ## 5. The End
 
 Congratulations!

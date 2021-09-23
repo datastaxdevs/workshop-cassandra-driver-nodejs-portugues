@@ -278,14 +278,16 @@ the following:
 You are finally ready to try out some code! We will connect to the database
 and perform various queries to read and write data.
 
-_Note._ The Node.js Cassandra drivers work either with callback or with
-promises: to keep the code simple and to the point, in the following snippets
-we generally don't deal with clean shutdown of resources
-(i.e. `client.shutdown()`). In a running script you may want to be more
-parsimonious.
+_Note._ The Node.js Cassandra drivers work either with callbacks or with
+promises. Generally, for the following examples to be self-contained
+scripts, we cleanly release resources (i.e. `client.shutdown()`) after use.
+In an actual running script, or in an API, you may want to apply extra care
+to avoid both premature release of the client connection and its opposite,
+leftover resources hanging around.
 
 We assume you are familiar with Node.js enough to figure out how to adapt
-the code snippets below for running interactively in a REPL, line-by-line.
+the code snippets below for running interactively in a REPL, line-by-line,
+should you prefer to.
 
 ### 4a. A first reading
 
@@ -306,24 +308,30 @@ From this point onward, code snippets will be connecting to Astra DB
 by default: to change them into accessing Cassandra, you will have to
 comment one `config` and uncomment+adjust the other `config`.
 
-What follows can be run as a single Node invocation with
+You can run the various samples as stand-alone scripts with
 
-    node code/03_queries/queries.js
+    node code/03_queries/queries_a.js
+    node code/03_queries/queries_b.js
+    node code/03_queries/queries_c.js
+    node code/03_queries/queries_d.js
+    node code/03_queries/queries_e.js
+    node code/03_queries/queries_f.js
+    node code/03_queries/queries_g.js
 
 however, it is perhaps more instructive to open a REPL and paste commands
 piecewise to see what each block does. You will see, in this order,
 code snippets that achieve the following:
 
-- create a new `metals` table - CQL check with `DESCRIBE TABLES`
-- insert a row in it with a "questionable" statement - CQL check with `SELECT * FROM metals;`
-- insert another row with a more gracious syntax (parameter list and type hints)
-- insert another row with a prepared statement, with array- and object-based parameters
-- insert a row with an idiomatic promise-based construct
-- insert a row with an idiomatic callback-based construct
-- read rows with promises
-- read rows with callbacks
-- read rows with `eachRow()`
-- executes a sample batch
+- (a) create a new `metals` table - CQL check with `DESCRIBE TABLES`
+- (a) insert a row in it with a "questionable" statement - CQL check with `SELECT * FROM metals;`
+- (a) insert another row with a more gracious syntax (parameter list and type hints)
+- (a) insert another row with a prepared statement, with array- and object-based parameters
+- (b) insert a row with an idiomatic promise-based construct
+- (c) insert a row with an idiomatic callback-based construct
+- (d) read rows with promises
+- (e) read rows with callbacks
+- (f) read rows with `eachRow()`
+- (g) executes a sample batch
 
 ### 4c. A simple API
 

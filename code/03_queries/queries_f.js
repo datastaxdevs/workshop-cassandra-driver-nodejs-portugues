@@ -1,5 +1,6 @@
-const { Client, types } = require('cassandra-driver');
+const { Client } = require('cassandra-driver');
 
+// Astra DB
 const config = {
   cloud: {
     secureConnectBundle: process.env.SECURE_CONNECT_BUNDLE
@@ -11,7 +12,9 @@ const config = {
   keyspace: 'chemistry'
 };
 
+
 /*
+// Cassandra
 const config = {
     contactPoints: ['172.19.0.2'],
     localDataCenter: 'datacenter1',
@@ -25,29 +28,17 @@ async function main() {
 
   await client.connect();
 
-  const qry = 'SELECT name, density FROM metals WHERE kind = ?;';
-  const arg = ['regular'];
-  const fetchSize = 2;
-  const qOpts =     {
-    prepare: true,
-    fetchSize: fetchSize
-  };
-
-  // we will neglect to shutdown the client here to focus on the point
-  // Hit Ctrl-C to interrupt the script when done.
-
+  // get all regular metals with the eachRow method
+  // (try tweaking the table name to a nonexistent one)
   client.eachRow(
-    qry,
-    arg,
-    {
-      ...{autoPage: true},
-      ...qOpts
-    },
+    'SELECT name, density FROM metals WHERE kind = ?;',
+    ['regular'],
+    {prepare: true},
     (n, row) => {
-      // 'n' will be an **in-page** index
       console.log('Metal %s is %s with density %s', n, row.name, row.density)
     },
     err => {
+      // if err is null, it just means 'no more rows left'
       if (err) {
         console.error('Error reading regular metals:', err)
       } else {

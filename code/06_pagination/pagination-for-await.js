@@ -41,6 +41,8 @@ async function main() {
     console.log('Metal %s has density %s', row.name, row.density)
   }
 
+  client.shutdown().then( () => console.log('** Connection closed'));
+
 }
 
 main();

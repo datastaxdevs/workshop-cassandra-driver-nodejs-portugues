@@ -36,7 +36,7 @@ async function main() {
       rows.forEach( row => {
         console.log('Symbol for %s is %s', row['name'], row['symbol']);
       });
-      client.shutdown();
+      client.shutdown().then( () => console.log('** Client closed'));
     });
 
 }

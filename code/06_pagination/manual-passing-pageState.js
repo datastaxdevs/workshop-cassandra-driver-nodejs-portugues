@@ -51,6 +51,8 @@ async function main() {
     }
   }
 
+  client.shutdown().then( () => console.log('** Connection closed'));
+
 }
 
 main();

@@ -53,6 +53,7 @@ async function main() {
           result.nextPage();
         } else {
           console.log("   [End of results]");
+          client.shutdown().then( () => console.log('** Connection closed'));
         }
       } else {
         // some error to handle here

@@ -48,6 +48,7 @@ async function main() {
     .on('end', function () {
       // no more rows to be consumed in the stream
       console.log("   [End of results]");
+      client.shutdown().then( () => console.log('** Connection closed'));
     });
 
 }

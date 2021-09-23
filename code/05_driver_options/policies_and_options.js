@@ -64,8 +64,10 @@ async function main() {
       console.log('Metal %s is %s with density %s', n, row.name, row.density)
     },
     err => {
-      if(err){
+      if (err) {
         console.error('Error reading regular metals:', err)
+      } else {
+        client.shutdown().then( () => console.log('** Connection closed'));
       }
     }
   );

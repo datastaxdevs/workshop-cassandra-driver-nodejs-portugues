@@ -75,6 +75,9 @@ async function main() {
   const row3 = (await client.execute(qry, arg)).first();
   console.log('Copper density = %s', row3['density']);
 
+  await client.shutdown();
+  console.log('** Connection closed');
+
 }
 
 main();

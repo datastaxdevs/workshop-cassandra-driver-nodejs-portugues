@@ -35,12 +35,12 @@ const client = new Client(config);
 
 /*
   Sample curls:
-    curl localhost:5000/metal | jq
-    curl localhost:5000/metal/silver | jq
-    curl -XPOST localhost:5000/metal \
+    curl -s localhost:5000/metal | jq
+    curl -s localhost:5000/metal/silver | jq
+    curl -s -XPOST localhost:5000/metal \
       --data '{"density": 101.11, "name": "armonium"}' \
       -H "Content-Type: application/json" | jq
-    curl localhost:5000/metal | jq
+    curl -s localhost:5000/metal | jq
 */
 
 api.get('/metal', (req, res) => {

@@ -40,8 +40,15 @@ Começamos com a instalação básica dos componentes:
 mkdir code-pt-br
 cd code-pt-br
 npm init -y
-npm i cassandra-driver express
+npm i cassandra-driver express dotenv
+touch index.js
+echo "console.log('Vamos começar')" > index.js
+node index.js
 ```
+
+> Se o terminal mostrou **Vamos começar** você está pronta para continuar!
+
+Nota: vamos usar a versão `"type": "module"` no package.json
 
 ## 2. Passo a passo para criar a infraestrutura
 
@@ -86,87 +93,99 @@ Não é necessário cartão de crédito, e você ganha crédito de US$ 25,00 tod
 ### O banco de dados já está ativo?
 Você verá seu novo banco de dados pendente no Painel.
 
-O status mudará para Ativo quando o banco de dados estiver pronto, isso levará apenas 2-3 minutos. Você também receberá um e-mail quando estiver pronto.
+O status mudará para Ativo quando o banco de dados estiver pronto.
+
+Você também receberá um e-mail com essa notificação.
+
 <img src="images-pt-br/Screen Shot 2022-03-15 at 14.03.00.png" />
 
-## 🥳 Conectando ao banco de dados
+## 🥳 Credenciais para conectar ao banco de dados
 
-Now prepare an environment file defining some variables to make it easy
-to connect to the database from the Node code samples.
+Vamos agora expor variaveis de ambiente para conectar ao banco de dados.
 
-#### Token
+### ✅ Clique em "CONNECT" no canto superior direito (imagem)
 
-You need to go to the Astra DB interface and generate a **token**:
-the information in the token (specifically, the "Client ID" and
-"Client Secret"), together with a "bundle" containing some certificates, will
-provide authentication when connecting to the database from your computer.
+<img src="images-pt-br/Screen Shot 2022-03-15 at 14.48.34.png" />
 
-_Note_: once the token is created, please store it in a safe place (the Astra
-console won't show it again) and keep it as private as a password! As long as you have not yeat left the page, you can also
-download/save the token data in CSV format.
+### 🚧 Selecione Node.JS no menu lateral
 
-To create the token from your main dashboard (where your databases are listed)
-simply click on the "..." menu next to your database and choose "Generate a token".
-Choose the role "Database Administrator" and click on "Generate Token".
+Aqui é um momento chave onde você precisa ir para a página de criação de token e download das credenciais.
 
-_Alternatively, go to the Astra dashboard, open the Organization menu on the
-top left and choose "Organization settings", then "Token Management" and finally
-you will be able to generate a new token. Choose the role "Database Administrator"._
+- Primeiro clique em **DOWNLOAD BUNDLE**
+- Em seguida clique no link com a palavra **HERE** (indicado na imagem)
+<img src="images-pt-br/Screen Shot 2022-03-15 at 15.35.42.png" />
 
-Download the token in CSV format and/or copy
-its value to a handy place such as a text editor: we will use it immediately!
+### Gere um token como Administrador
 
-_See this [documentation](https://docs.datastax.com/en/astra/docs/manage-application-tokens.html) to create your application token._ 
+<img src="images-pt-br/Screen Shot 2022-03-15 at 14.52.45.png" />
 
-**Once you have your token**, create a file `.env`
-(you can use the `.env.sample` as template) and make
-sure you set Client ID and Client Secret to the ones for your token.
+### ✅ Clique em "DOWNLOAD TOKEN DETAILS"
 
-#### Secure Connect Bundle
+<img src="images-pt-br/Screen Shot 2022-03-15 at 14.53.29.png" />
 
-The other piece needed is the SCB, a zip file containing certificate
-and settings needed
-for the authentication to work. Go to your Astra DB console, choose your
-`nodepractice` database and pick the "Connect" tab. In the menu, click on
-the "Connect using a driver / Node.js" item and the main page
-will give you the option to "Download your Secure Connect Bundle".
+# 🇧🇷 Conectar ao banco de dados com Javascript
 
-<details>
-    <summary>👁️ Getting the Secure Connect Bundle (click to expand)</summary>
-    <img src="images/bundle.png" />
-</details>
+Insira os segredos e credenciais baixados até agora no seu `.env`. Sugestão:
+ 
+```shell
+touch .env
+echo "SECURE_CONNECT_BUNDLE=secure-connect-workshop.zip" >> .env
+echo "ASTRA_DB_CLIENT_ID=RAwfLeZORZoPnSUYQSgbnhEX" >> .env
+echo "ASTRA_DB_CLIENT_SECRET=XjvJawKpp2iyRZJGDmGFLCc+jvDpRi,MNAs4se5Glj0qhhDm4TBsl7x71vMcexNm8aubaND0pj,zCLOP59JZ2FPh1gT+mIJzCtOx6ZB0ocgSZJ-9bbZfvn-yP5ht85b0" >> .env
+```
 
-**Download the file** and store it somewhere in your file system; then,
-make sure you edit the `.env` file with the full path to this file.
+Vamos testar?
 
-The `.env` file is now ready to be used! Source it with
+```shell
+echo "require('dotenv').config(); \n console.log(process.env.SECURE_CONNECT_BUNDLE)" >> index.js
+node index.js
+```
 
-    . .env
+O resultado deve ser
 
-(you will have to source the file for any shell in which you need to connect
-to Astra DB).
+```
+Vamos começar
+secure-connect-workshop.zip
+```
 
-_Note_: if you want/need to define the environment variables in another way, no
-problem! For instance, if you are running Windows, the syntax to export the
-three environment variables `SECURE_CONNECT_BUNDLE`, `ASTRA_DB_CLIENT_ID` and
-`ASTRA_DB_CLIENT_SECRET` is different and you will have to adapt
-the above instructions. If you prefer, you could also simply hardcode three
-strings in the Node code - though this is a _Very Bad Practice™_.
+# Criar a primeira tabela
 
-## 3. Prepare your database
+Vamos apagar tudo do `ìndex.js` e substituir com
 
-You are almost ready to start accessing your database using the drivers:
-but first, create a table and put some test data in it.
+```js
+import dotenv from "dotenv"; // permite acessar process.env via .env
+import { Client } from "cassandra-driver"; // 🤩 a estrela de hoje
 
-### 3a. Keyspace creation (Cassandra only)
+dotenv.config(); // inicializa o pacote
 
-_Note._ If you are using a default Cassandra installation instead of Astra DB,
-you will have to create the `chemistry` keyspace yourself. To do so, open a
-`cqlsh` console and enter the following command:
+/* Configurações do banco de dados na nuvem, AstraDB */
+const cassandraConfig = {
+  cloud: {
+    secureConnectBundle: process.env.SECURE_CONNECT_BUNDLE,
+  },
+  credentials: {
+    username: process.env.ASTRA_DB_CLIENT_ID,
+    password: process.env.ASTRA_DB_CLIENT_SECRET,
+  },
+  keyspace: "demo",
+};
 
-    // Run if not using Astra DB
-    // Adjust the replication factor to 3 or the number of nodes in your cluster, whichever is smaller:
-    CREATE KEYSPACE chemistry WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 2};
+const clienteCassandra = new Client(cassandraConfig); // inicializa o cliente
+
+/* Essa é a função principal da aplicação neste workshop */
+const consultarBancoDeDados = async () => {
+  await clienteCassandra.connect(); // aguarda a conexão ao banco
+  const consultaCQL = `SELECT * FROM system.local`; // 1a consulta CQL do dia
+  // a próxima linha aguarda a execução da consulta
+  const respostaConsulta = await clienteCassandra.execute(consultaCQL);
+  await clienteCassandra.shutdown(); // desconecta ao banco
+  return respostaConsulta;
+};
+
+const resultadoFinal = await consultarBancoDeDados();
+console.log(resultadoFinal);
+
+```
 
 ### 3b. Table creation
 
@@ -220,13 +239,6 @@ Once you see results, the import has finished.
     <img src="images/astra_load_data.gif" />
 </details>
 
-_Note._ If you are using a default Cassandra installation instead of Astra DB,
-the above import procedure is replaced by a command in the CQL shell: assuming
-it has access to the file, and that you are on the `chemistry` keyspace, run
-the following:
-
-    // Run if not using Astra DB
-    COPY elements FROM 'elements.csv' WITH HEADER=TRUE;
 
 **Code snippet**: The CQL commands are found in [`setup.cql`](code/01_setup/setup.cql).
 

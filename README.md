@@ -1,116 +1,95 @@
-# Cassandra Node.js drivers practice
+# Versão em Português do workshop Cassandra driver javascript node.js
 
-Hello and welcome!
-This is the companion repository for the "Cassandra Node.js drivers practice"
-presentation.
-In this repository you'll find all code snippets for you to get some practice
-and follow along - plus instructions to repeat the practice on your own!
+Olá e bem-vindo!
 
-You will complete this practice with a good understanding of what you can do,
-and how, with the Node.js drivers for Apache Cassandra™.
+Este é o repositório complementar para a apresentação prática dos drivers Cassandra em Javascript / Node.js.
 
-For the complete **driver documentation**, please go
-[here](https://docs.datastax.com/en/developer/nodejs-driver/4.6/)
-and start exploring.
+Neste repositório você encontrará todos os trechos de código para você praticar e acompanhar.
 
-To get the **presentation slide deck**, click
-[here](presentation/cassandra-nodejs-drivers-presentation.pdf).
+> Além disso também disponibilizamos instruções para repetir a prática por conta própria!
 
-This practice will be done on your own computer: you will need
+Você concluirá esta prática com uma boa compreensão do que pode fazer,
+e como, com os drivers Node.js para Apache Cassandra™.
 
-- a working internet connection
-- `Node.js` v15+
-- `npm` v 7+
+## Documentação oficial
+Node.js driver
+- [https://docs.datastax.com/en/developer/nodejs-driver/4.6/](https://docs.datastax.com/en/developer/nodejs-driver/4.6/)
 
-**Note**: don't worry if you don't have an Apache Cassandra™ installation
-handy! Indeed, you can create your very own **Astra DB** database in
-the cloud FOR FREE, which is a Database-as-a-service built on Apache Cassandra™,
-and is perfect for the exercises (and not only...).
+## Slides
+slides usados na aprentação
 
-We will guide you through creation and setup of your Astra DB instance
-momentarily.
+- [presentation/cassandra-nodejs-drivers-presentation.pdf](presentation/cassandra-nodejs-drivers-presentation.pdf).
 
-## 1. Set up your environment
+## Requisitos
+Para praticar você precisa:
 
-This is a practice session: we will not provide a `package.json` file
-nor a full-fledged running app. You will have to follow some instructions
-to set up your environment from scratch.
+- internet (*o banco de dados Apache Cassandra usado aqui está na nuvem*)
+-  o Node.js LTS (ou superior) https://nodejs.org/en/
 
-First install some dependencies:
+**Nota**: crie sua instância do Apache Cassandra chamado **AstraDB** 
+de graça. https://astra.datastax.com/
+> Você ganha $25 todo mês em créditos (isso dá até 80GB por mês **na faixa**)
 
-    npm install cassandra-driver@4.6.3
-    npm install express@4.17.1
+## 1. Configurando o ambiente
 
-You now have the Cassandra drivers ready to use! (As for `express`, it
-will be needed for one of the demos later).
-You will run the following practice in this directory, in a Node REPL if you
-prefer.
+> Sugestão: use o Linux, Mac ou WSL/Windows
 
-## 2. Create & connect your database
+Começamos com a instalação básica dos componentes:
 
-We will guide you through creation of your Astra DB instance, which will act
-as a Cassandra database in the cloud, ready for our experiments. Of course,
-everything you see here will run as well with a regular Cassandra database.
+```shell
+mkdir code-pt-br
+cd code-pt-br
+npm init -y
+npm i cassandra-driver express
+```
 
-The following instructions are for Astra DB: to work with standard Cassandra,
-please skip to subsection "2c. Connecting to a Cassandra DB".
+## 2. Passo a passo para criar a infraestrutura
 
-### 2a. Creating your Astra DB instance
+O AstraDB é a maneira mais simples de executar o Cassandra com zero instalações - basta apertar o botão e obter seu cluster. 
+Não é necessário cartão de crédito, e você ganha crédito de US$ 25,00 todos os meses. Isso é aproximadamente:
+- 5 milhões de gravações, 
+- 30 milhões de leituras, 
+- 40 GB de armazenamento mensal
 
-_**`ASTRA DB`** is the simplest way to run Cassandra with zero operations at all - just push the button and get your cluster. No credit card required, $25.00 USD credit every month, roughly 5M writes, 30M reads, 40GB storage monthly - sufficient to run small production workloads._
+### Site
+✅ Acesse o seu banco de dados em [https://astra.datastax.com](https://astra.datastax.com/)
 
-✅ Register (if needed) and Sign In to Astra DB [https://astra.datastax.com](https://astra.datastax.com/): You can use your `Github`, `Google` accounts or register with an `email`.
-
-_Make sure to chose a password with minimum 8 characters, containing upper and lowercase letters, at least one number and special character_
-
-✅ Choose "Start Free Now"
-
-Choose the "Start Free Now" plan, then "Get Started" to work in the free tier.
-
-You will have plenty of free initial credit (renewed each month!), roughly corresponding
-to 40 GB of storage, 30M reads and 5M writes.
-
-> If this is not enough for you, congratulations! You are most likely running a mid- to large-sized business! In that case you should switch to a paid plan.
-
-(You can follow this [guide](https://docs.datastax.com/en/astra/docs/creating-your-astra-database.html) to set up your free-tier database with the $25 monthly credit.)
+- Você pode logar com seu `Github`, `Google` ao invés de criar mais uma combinação `email e senha`.
 
 <details>
-    <summary>👁️ Signup screenshot (click to expand)</summary>
-    <img src="images/astra_signup.gif" />
+    <summary>Se for sua primeira vez acessando o site, clique aqui</summary>
+    <img src="images-pt-br/Screen Shot 2022-03-15 at 13.20.01.png" />
+    <img src="images-pt-br/Screen Shot 2022-03-15 at 13.20.09.png" />
+    <img src="images-pt-br/Screen Shot 2022-03-15 at 13.20.59.png" />
 </details>
 
-To create the database:
+### O banco
+> **A interface em https://astra.datastax.com está em Inglês**. Vamos lá:
 
-- **For the database name** - `nodepractice`.
+<img src="images-pt-br/Screen Shot 2022-03-15 at 13.21.07.png" />
 
-- **For the keyspace name** - `chemistry`. The code below assumes this keyspace name, so please try not to be creative this time
+- ✅ Clique em um dos botões que com **CREATE DATABASE** ou **CREATE SERVERLESS DATABASE** (ambos são equivalentes)
+- ✅ Vamos dar nomes
+  - DATABASE NAME: `workshop` 
+  - KEYSPACE NAME: `demo`
+> Sugiro escolher `NORTH AMERICA` e depois `MONCKS CORNER (us-east1)`
+  - ✅ Clique no botão bem a direita **CREATE DATABASE**
 
-| Parameter | Value 
-|---|---|
-| Database name | nodepractice |
-| Keyspace name | chemistry |
+<img src="images-pt-br/Screen Shot 2022-03-15 at 13.22.43.png" />
 
-_You can technically use whatever you want and update the code to reflect the keyspace. This is really to get you on a happy path for the first run._
+#### Nota
+⚠️ Como usuário do plano FREE, você pode usar **GCP** e **qualquer Area ou Região que esteja destravada**
 
-- **For provider and region**: Choose and provider (either GCP, AWS or Azure). Region is where your database will reside physically (choose one close to you or your users).
+- Se você quiser **GCP** > `SOUTH AMERICA` > `SAO PAULO (southamerica-east1)`, sugiro cadastrar o cartão de crédito
+- Se você quiser **AWS** ou **AZURE** > `*qualquer região*` > `*qualquer área*`, sugiro cadastrar o cartão de crédito
 
-- **Create the database**. Review all the fields to make sure they are as shown, and click the `Create Database` button.
+### O banco de dados já está ativo?
+Você verá seu novo banco de dados pendente no Painel.
 
-You will see your new database `pending` in the Dashboard.
+O status mudará para Ativo quando o banco de dados estiver pronto, isso levará apenas 2-3 minutos. Você também receberá um e-mail quando estiver pronto.
+<img src="images-pt-br/Screen Shot 2022-03-15 at 14.03.00.png" />
 
-The status will change to `Active` when the database is ready, this will only take 2-3 minutes. You will also receive an email when it is ready.
-
-<details>
-    <summary>👁️ Database in "active" state (click to expand)</summary>
-    <img src="images/dashboard-pending-1000-update.png" />
-</details>
-
-<details>
-    <summary>👁️ DB creation walkthrough (click to expand)</summary>
-    <img src="images/astra-create-db.gif" />
-</details>
-
-### 2b. Connecting to Astra DB
+## 🥳 Conectando ao banco de dados
 
 Now prepare an environment file defining some variables to make it easy
 to connect to the database from the Node code samples.
@@ -173,28 +152,6 @@ three environment variables `SECURE_CONNECT_BUNDLE`, `ASTRA_DB_CLIENT_ID` and
 `ASTRA_DB_CLIENT_SECRET` is different and you will have to adapt
 the above instructions. If you prefer, you could also simply hardcode three
 strings in the Node code - though this is a _Very Bad Practice™_.
-
-### 2c. Connecting to a Cassandra DB
-
-If you want to practice with a standard Cassandra installation instead of an Astra DB instance,
-you will need the IP address(es) of at least one of the nodes in the cluster,
-plus any other authentication mechanism configured on the cluster.
-
-Assuming there is no authentication at all (which is admissible only for a
-test cluster!), to connect to the database you will have to use a `config`
-set of options similar to the following (details may vary depending
-on your database's configuration):
-
-    const config = {
-        // one or more node IP addresses here
-        contactPoints: ['12.34.56.78', '78.56.34.12'],
-        localDataCenter: 'datacenter1',
-        keyspace: 'chemistry'
-    };
-
-This `config` will have to replace the one found in this repo's code snippets,
-which  are written to read the Astra DB environment variables and connect to
-that database. (See "4a. A first reading" below for a working example)
 
 ## 3. Prepare your database
 

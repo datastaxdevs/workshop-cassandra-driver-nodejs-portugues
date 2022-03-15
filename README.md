@@ -15,11 +15,6 @@ e como, com os drivers Node.js para Apache Cassandra™.
 Node.js driver
 - [https://docs.datastax.com/en/developer/nodejs-driver/4.6/](https://docs.datastax.com/en/developer/nodejs-driver/4.6/)
 
-## Slides
-slides usados na aprentação
-
-- [presentation/cassandra-nodejs-drivers-presentation.pdf](presentation/cassandra-nodejs-drivers-presentation.pdf).
-
 ## Requisitos
 Para praticar você precisa:
 
@@ -152,6 +147,28 @@ secure-connect-workshop.zip
 
 # Criar a primeira tabela
 
+Recaptitulando, nosso `package.json` deve estar assim:
+````json
+{
+  "name": "workshop-cassandra-pt-br",
+  "version": "1.0.0",
+  "description": "Apresentação sobre Cassandra usando drivers",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [],
+  "author": "Daniel S<iam@w-b.dev>",
+  "license": "Apache",
+  "dependencies": {
+    "cassandra-driver": "^4.6.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1"
+  }
+}
+````
+
 Vamos apagar tudo do `ìndex.js` e substituir com
 
 ```js
@@ -186,8 +203,20 @@ const consultarBancoDeDados = async () => {
 
 const resultadoFinal = await consultarBancoDeDados();
 console.log(resultadoFinal);
-
 ```
+
+Vamos testar?
+````shell
+node index.js
+````
+O resultado dever ser
+````
+ResultSet {
+  info: {
+    queriedHost: '172.25.140.4:9042',
+    triedHosts: { '172.25.140.4:9042': null },
+...
+````
 
 ### 3b. Table creation
 

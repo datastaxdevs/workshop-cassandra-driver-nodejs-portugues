@@ -4,3 +4,4 @@ package.json
 .env
 *.zip
 trash/
+.idea

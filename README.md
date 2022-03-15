@@ -125,7 +125,9 @@ Aqui é um momento chave onde você precisa ir para a página de criação de to
 
 # 🇧🇷 Conectar ao banco de dados com Javascript
 
-Insira os segredos e credenciais baixados até agora no seu `.env`. Sugestão:
+Insira os segredos e credenciais baixados até agora no seu `.env`. 
+
+Sugestão de como inserir (esses valores são exemplos):
  
 ```shell
 touch .env

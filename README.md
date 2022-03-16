@@ -33,11 +33,23 @@ Começamos com a instalação básica dos componentes:
 
 ```shell
 mkdir code-pt-br
+```
+```shell
 cd code-pt-br
+```
+```shell
 npm init -y
-npm i cassandra-driver express dotenv
+```
+```shell
+npm i cassandra-driver dotenv
+```
+```shell
 touch index.js
+```
+```shell
 echo "console.log('Vamos começar')" > index.js
+```
+```shell
 node index.js
 ```
 

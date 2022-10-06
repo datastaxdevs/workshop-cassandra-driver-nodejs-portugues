@@ -130,6 +130,12 @@ Aqui é um momento chave onde você precisa ir para a página de criação de to
 
 <img src="images-pt-br/Screen Shot 2022-03-15 at 14.53.29.png" />
 
+> **⚠️ Important**
+> ```
+> The instructor will show you on screen how to create a token 
+> but will have to destroy to token immediately for security reasons.
+> ```
+
 # 🇧🇷 Conectar ao banco de dados com Javascript
 
 Insira os segredos e credenciais baixados até agora no seu `.env`. 
